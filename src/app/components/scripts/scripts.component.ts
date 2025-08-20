@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { Script, PaymentCheckout } from '../../models/client.model';
+import { Script, PaymentCheckout, PaymentStatus as PaymentStatusModel } from '../../models/client.model';
 
 @Component({
   selector: 'app-scripts',
@@ -102,7 +102,7 @@ export class ScriptsComponent implements OnInit {
     this.paymentPolling = true;
     const pollInterval = setInterval(() => {
       this.apiService.getPaymentStatus(this.paymentData!.paymentId).subscribe({
-        next: (status) => {
+        next: (status: PaymentStatusModel) => {
           if (status.status === 'approved') {
             clearInterval(pollInterval);
             this.paymentPolling = false;
