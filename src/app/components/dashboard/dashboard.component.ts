@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { ApiService } from '../../services/api.service';
-import { Client, IpWhitelist, ScriptRental, WhatsAppConfig } from '../../models/client.model';
+import { Client, IpWhitelist, ScriptRental, WhatsAppConfig, RentalPaymentStatus } from '../../models/client.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -114,7 +114,7 @@ export class DashboardComponent implements OnInit {
   }
 
   isRentalActive(rental: ScriptRental): boolean {
-    return new Date(rental.endDate) > new Date() && rental.paymentStatus === 'APPROVED';
+    return new Date(rental.endDate) > new Date() && rental.paymentStatus === RentalPaymentStatus.APPROVED;
   }
 
   // WhatsApp methods

@@ -42,11 +42,11 @@ export interface ScriptRental {
   script?: Script;
   startDate: Date;
   endDate: Date;
-  paymentStatus: PaymentStatus;
+  paymentStatus: RentalPaymentStatus;
   createdAt: Date;
 }
 
-export enum PaymentStatus {
+export enum RentalPaymentStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
