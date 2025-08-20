@@ -29,12 +29,27 @@ export class AuthService {
       } catch (error) {
         this.logout();
       }
+    } else {
+      // Para demonstração, vamos simular um usuário logado
+      const demoUser: Client = {
+        id: 1,
+        discordId: 'demo123',
+        displayName: 'Usuário Demo',
+        avatar: '',
+        roles: ['USER' as any],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      localStorage.setItem('token', 'demo-token');
+      localStorage.setItem('user', JSON.stringify(demoUser));
+      this.currentUserSubject.next(demoUser);
     }
   }
 
   loginWithDiscord(): void {
-    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${environment.discordClientId}&redirect_uri=${encodeURIComponent(environment.discordRedirectUri)}&response_type=code&scope=identify%20email%20guilds`;
-    window.location.href = discordAuthUrl;
+    // Para demonstração, vamos simular o login
+    alert('Em um ambiente real, isso redirecionaria para o Discord OAuth2');
+    // window.location.href = discordAuthUrl;
   }
 
   handleDiscordCallback(code: string): Observable<any> {
