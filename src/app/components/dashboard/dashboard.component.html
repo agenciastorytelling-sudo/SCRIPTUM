@@ -1,0 +1,199 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <div class="user-info" *ngIf="currentUser">
+      <span>Bem-vindo, {{ currentUser.displayName }}!</span>
+    </div>
+  </div>
+
+  <div class="dashboard-tabs">
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'whitelist'"
+      (click)="setActiveTab('whitelist')">
+      🛡️ Whitelist de IPs
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'rentals'"
+      (click)="setActiveTab('rentals')">
+      📜 Minhas Licenças
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'whatsapp'"
+      (click)="setActiveTab('whatsapp')">
+      💬 WhatsApp Bot
+    </button>
+  </div>
+
+  <!-- Whitelist Tab -->
+  <div class="tab-content" *ngIf="activeTab === 'whitelist'">
+    <div class="section-card">
+      <h2>Gerenciar Whitelist de IPs</h2>
+      <p class="section-description">
+        Adicione os IPs que terão acesso aos seus scripts. Máximo de 5 IPs por conta.
+      </p>
+
+      <div class="add-ip-form">
+        <div class="form-row">
+          <input 
+            type="text" 
+            [(ngModel)]="newIp" 
+            placeholder="Ex: 192.168.1.1 ou 192.168.1.0/24"
+            class="ip-input">
+          <input 
+            type="text" 
+            [(ngModel)]="newIpNote" 
+            placeholder="Nota (opcional)"
+            class="note-input">
+          <button 
+            class="primary" 
+            (click)="addIp()" 
+            [disabled]="whitelistLoading || !newIp.trim()">
+            {{ whitelistLoading ? 'Adicionando...' : 'Adicionar' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="whitelist-table" *ngIf="whitelist.length > 0">
+        <div class="table-header">
+          <span>IP</span>
+          <span>Nota</span>
+          <span>Adicionado em</span>
+          <span>Ações</span>
+        </div>
+        <div class="table-row" *ngFor="let item of whitelist">
+          <span class="ip">{{ item.ip }}</span>
+          <span class="note">{{ item.note || '-' }}</span>
+          <span class="date">{{ item.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          <button class="remove-btn" (click)="removeIp(item.id)">
+            🗑️ Remover
+          </button>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="whitelist.length === 0 && !whitelistLoading">
+        <p>Nenhum IP adicionado ainda.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rentals Tab -->
+  <div class="tab-content" *ngIf="activeTab === 'rentals'">
+    <div class="section-card">
+      <h2>Minhas Licenças</h2>
+      <p class="section-description">
+        Gerencie suas licenças ativas e visualize o histórico de compras.
+      </p>
+
+      <div class="rentals-grid" *ngIf="rentals.length > 0">
+        <div class="rental-card" *ngFor="let rental of rentals" [class.active]="isRentalActive(rental)">
+          <div class="rental-header">
+            <h3>{{ rental.script?.name || 'Script #' + rental.scriptId }}</h3>
+            <span class="status" [class]="rental.paymentStatus.toLowerCase()">
+              {{ rental.paymentStatus }}
+            </span>
+          </div>
+          <div class="rental-info">
+            <p><strong>Início:</strong> {{ rental.startDate | date:'dd/MM/yyyy' }}</p>
+            <p><strong>Fim:</strong> {{ rental.endDate | date:'dd/MM/yyyy' }}</p>
+            <p class="days-left" *ngIf="isRentalActive(rental)">
+              <strong>Status:</strong> 
+              <span class="active-badge">Ativo</span>
+            </p>
+            <p class="expired" *ngIf="!isRentalActive(rental)">
+              <strong>Status:</strong> 
+              <span class="expired-badge">Expirado</span>
+            </p>
+          </div>
+          <div class="rental-actions">
+            <button class="secondary" *ngIf="isRentalActive(rental)">
+              📖 Documentação
+            </button>
+            <button class="primary" *ngIf="!isRentalActive(rental)">
+              🔄 Renovar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="rentals.length === 0 && !rentalsLoading">
+        <p>Você ainda não possui licenças.</p>
+        <button class="primary" routerLink="/scripts">
+          Ver Scripts Disponíveis
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WhatsApp Tab -->
+  <div class="tab-content" *ngIf="activeTab === 'whatsapp'">
+    <div class="section-card">
+      <h2>Configuração WhatsApp Bot IA</h2>
+      <p class="section-description">
+        Configure seu bot do WhatsApp para integração com IA.
+      </p>
+
+      <form class="whatsapp-form">
+        <div class="form-group">
+          <label for="instanceName">Nome da Instância</label>
+          <input 
+            type="text" 
+            id="instanceName"
+            [(ngModel)]="whatsappForm.instanceName" 
+            name="instanceName"
+            placeholder="Ex: meu-bot-whatsapp">
+        </div>
+
+        <div class="form-group">
+          <label for="apiKey">Chave da API</label>
+          <input 
+            type="password" 
+            id="apiKey"
+            [(ngModel)]="whatsappForm.apiKey" 
+            name="apiKey"
+            placeholder="Sua chave da API Evolution">
+        </div>
+
+        <div class="form-group">
+          <label for="webhookUrl">URL do Webhook</label>
+          <input 
+            type="url" 
+            id="webhookUrl"
+            [(ngModel)]="whatsappForm.webhookUrl" 
+            name="webhookUrl"
+            placeholder="https://seu-dominio.com/webhook">
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="whatsappForm.isActive"
+              name="isActive">
+            <span class="checkmark"></span>
+            Bot ativo
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button 
+            type="button" 
+            class="secondary" 
+            (click)="testWhatsAppConfig()"
+            [disabled]="whatsappTesting || !whatsappForm.apiKey">
+            {{ whatsappTesting ? 'Testando...' : '🧪 Testar Configuração' }}
+          </button>
+          <button 
+            type="button" 
+            class="primary" 
+            (click)="saveWhatsAppConfig()"
+            [disabled]="whatsappLoading">
+            {{ whatsappLoading ? 'Salvando...' : '💾 Salvar Configuração' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

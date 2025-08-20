@@ -1,0 +1,136 @@
+<div class="scripts-container">
+  <div class="scripts-header">
+    <h1>Catálogo de Scripts</h1>
+    <p class="subtitle">Descubra e adquira os melhores scripts para seu servidor FiveM</p>
+  </div>
+
+  <div class="filters-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        (input)="onSearchChange()"
+        placeholder="Buscar scripts..."
+        class="search-input">
+      <span class="search-icon">🔍</span>
+    </div>
+    
+    <div class="filter-buttons">
+      <button 
+        class="filter-btn" 
+        [class.active]="selectedFilter === 'all'"
+        (click)="selectedFilter = 'all'; onFilterChange()">
+        Todos
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="selectedFilter === 'popular'"
+        (click)="selectedFilter = 'popular'; onFilterChange()">
+        Populares
+      </button>
+      <button 
+        class="filter-btn" 
+        [class.active]="selectedFilter === 'new'"
+        (click)="selectedFilter = 'new'; onFilterChange()">
+        Novos
+      </button>
+    </div>
+  </div>
+
+  <div class="scripts-grid" *ngIf="!loading">
+    <div class="script-card" *ngFor="let script of filteredScripts">
+      <div class="script-image">
+        <img [src]="script.imageUrl || 'https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg'" 
+             [alt]="script.name"
+             loading="lazy">
+        <div class="price-badge">
+          R$ {{ script.price.toFixed(2) }}
+        </div>
+      </div>
+      
+      <div class="script-content">
+        <h3>{{ script.name }}</h3>
+        <p class="description">{{ script.shortDescription || script.description }}</p>
+        
+        <div class="script-footer">
+          <div class="script-meta">
+            <span class="active-badge" *ngIf="script.isActive">✅ Ativo</span>
+            <span class="inactive-badge" *ngIf="!script.isActive">❌ Inativo</span>
+          </div>
+          
+          <button 
+            class="buy-btn primary" 
+            (click)="buyScript(script)"
+            [disabled]="!script.isActive">
+            {{ script.isActive ? '🛒 Comprar' : 'Indisponível' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Carregando scripts...</p>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && filteredScripts.length === 0">
+    <h3>Nenhum script encontrado</h3>
+    <p>Tente ajustar os filtros ou termos de busca.</p>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal-overlay" *ngIf="showPaymentModal" (click)="closePaymentModal()">
+  <div class="payment-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Finalizar Compra</h2>
+      <button class="close-btn" (click)="closePaymentModal()">✕</button>
+    </div>
+    
+    <div class="modal-content">
+      <div class="script-info" *ngIf="selectedScript">
+        <h3>{{ selectedScript.name }}</h3>
+        <p class="price">R$ {{ selectedScript.price.toFixed(2) }}</p>
+      </div>
+      
+      <div class="payment-loading" *ngIf="paymentLoading">
+        <div class="spinner"></div>
+        <p>Gerando QR Code...</p>
+      </div>
+      
+      <div class="payment-content" *ngIf="paymentData && !paymentLoading">
+        <div class="qr-section">
+          <h4>Escaneie o QR Code</h4>
+          <div class="qr-code">
+            <img [src]="'data:image/png;base64,' + paymentData.qrCodeBase64" alt="QR Code Pix">
+          </div>
+        </div>
+        
+        <div class="pix-code-section">
+          <h4>Ou copie o código Pix</h4>
+          <div class="pix-code">
+            <input 
+              type="text" 
+              [value]="paymentData.copyPasteCode" 
+              readonly
+              class="pix-input">
+            <button class="copy-btn" (click)="copyPixCode()">
+              📋 Copiar
+            </button>
+          </div>
+        </div>
+        
+        <div class="payment-status" *ngIf="paymentPolling">
+          <div class="status-indicator">
+            <div class="pulse"></div>
+            <span>Aguardando pagamento...</span>
+          </div>
+          <p class="status-text">
+            Após o pagamento, sua licença será ativada automaticamente.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

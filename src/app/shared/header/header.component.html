@@ -2,7 +2,16 @@
     <div class="logo">[/] SCRIPTUM</div>
     <nav>
       <a href="#">Home</a>
-      <a href="#">Scripts</a>
+      <a routerLink="/scripts">Scripts</a>
       <a href="#">Contato</a>
+      <div class="auth-section">
+        <ng-container *ngIf="!isAuthenticated">
+          <a routerLink="/login" class="login-btn">Entrar</a>
+        </ng-container>
+        <ng-container *ngIf="isAuthenticated">
+          <a routerLink="/dashboard" class="dashboard-btn">Dashboard</a>
+          <button class="logout-btn" (click)="logout()">Sair</button>
+        </ng-container>
+      </div>
     </nav>
 </header>

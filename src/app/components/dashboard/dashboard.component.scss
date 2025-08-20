@@ -1,0 +1,461 @@
+@import 'src/variables';
+
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  
+  h1 {
+    font-size: 2.5rem;
+    color: var(--white);
+  }
+  
+  .user-info {
+    color: var(--mint);
+    font-weight: 500;
+  }
+}
+
+.dashboard-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--color-border);
+  
+  .tab-btn {
+    background: none;
+    border: none;
+    padding: 1rem 1.5rem;
+    color: #ccc;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    
+    &:hover {
+      color: var(--white);
+    }
+    
+    &.active {
+      color: var(--mint);
+      border-bottom-color: var(--mint);
+    }
+  }
+}
+
+.tab-content {
+  animation: fadeIn 0.3s ease;
+}
+
+.section-card {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px var(--color-box-shadow);
+  
+  h2 {
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  
+  .section-description {
+    color: #ccc;
+    margin-bottom: 2rem;
+  }
+}
+
+// Whitelist styles
+.add-ip-form {
+  margin-bottom: 2rem;
+  
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    
+    .ip-input, .note-input {
+      flex: 1;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      color: var(--white);
+      
+      &::placeholder {
+        color: #888;
+      }
+      
+      &:focus {
+        outline: none;
+        border-color: var(--mint);
+      }
+    }
+    
+    button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      
+      &.primary {
+        background: var(--mint);
+        color: var(--dark);
+        
+        &:hover:not(:disabled) {
+          opacity: 0.9;
+        }
+        
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+.whitelist-table {
+  .table-header, .table-row {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    align-items: center;
+  }
+  
+  .table-header {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--mint);
+    margin-bottom: 0.5rem;
+  }
+  
+  .table-row {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: background 0.3s ease;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .ip {
+      font-family: monospace;
+      color: var(--mint);
+    }
+    
+    .remove-btn {
+      background: #ff4757;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s ease;
+      
+      &:hover {
+        background: #ff3742;
+      }
+    }
+  }
+}
+
+// Rentals styles
+.rentals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.rental-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  
+  &.active {
+    border-color: var(--mint);
+    box-shadow: 0 0 20px rgba(53, 213, 172, 0.2);
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px var(--color-box-shadow);
+  }
+  
+  .rental-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    
+    h3 {
+      color: var(--white);
+      margin: 0;
+    }
+    
+    .status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      
+      &.approved {
+        background: rgba(46, 213, 115, 0.2);
+        color: #2ed573;
+      }
+      
+      &.pending {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+      }
+      
+      &.expired {
+        background: rgba(255, 71, 87, 0.2);
+        color: #ff4757;
+      }
+    }
+  }
+  
+  .rental-info {
+    margin-bottom: 1.5rem;
+    
+    p {
+      margin: 0.5rem 0;
+      color: #ccc;
+    }
+    
+    .active-badge {
+      background: rgba(46, 213, 115, 0.2);
+      color: #2ed573;
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+    
+    .expired-badge {
+      background: rgba(255, 71, 87, 0.2);
+      color: #ff4757;
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+  }
+  
+  .rental-actions {
+    display: flex;
+    gap: 0.5rem;
+    
+    button {
+      flex: 1;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      
+      &.primary {
+        background: var(--mint);
+        color: var(--dark);
+        
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+      
+      &.secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--white);
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.15);
+        }
+      }
+    }
+  }
+}
+
+// WhatsApp form styles
+.whatsapp-form {
+  .form-group {
+    margin-bottom: 1.5rem;
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--white);
+      font-weight: 500;
+    }
+    
+    input[type="text"], 
+    input[type="password"], 
+    input[type="url"] {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      color: var(--white);
+      
+      &::placeholder {
+        color: #888;
+      }
+      
+      &:focus {
+        outline: none;
+        border-color: var(--mint);
+      }
+    }
+    
+    &.checkbox-group {
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        
+        input[type="checkbox"] {
+          margin-right: 0.75rem;
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    
+    button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      
+      &.primary {
+        background: var(--mint);
+        color: var(--dark);
+        
+        &:hover:not(:disabled) {
+          opacity: 0.9;
+        }
+      }
+      
+      &.secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--white);
+        
+        &:hover:not(:disabled) {
+          background: rgba(255, 255, 255, 0.15);
+        }
+      }
+      
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #888;
+  
+  p {
+    margin-bottom: 1rem;
+  }
+  
+  button {
+    padding: 0.75rem 1.5rem;
+    background: var(--mint);
+    color: var(--dark);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.3s ease;
+    
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    
+    h1 {
+      font-size: 2rem;
+    }
+  }
+  
+  .dashboard-tabs {
+    flex-wrap: wrap;
+    
+    .tab-btn {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
+  
+  .add-ip-form .form-row {
+    flex-direction: column;
+    
+    .ip-input, .note-input {
+      width: 100%;
+    }
+  }
+  
+  .whitelist-table {
+    .table-header, .table-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      text-align: left;
+    }
+  }
+  
+  .rentals-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .whatsapp-form .form-actions {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
