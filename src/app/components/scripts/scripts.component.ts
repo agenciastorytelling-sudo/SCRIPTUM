@@ -22,6 +22,7 @@ export class ScriptsComponent implements OnInit {
   paymentData: PaymentCheckout | null = null;
   paymentLoading = false;
   paymentPolling = false;
+  private pollingInterval: any = null;
 
   constructor(private apiService: ApiService) {}
 
@@ -100,15 +101,24 @@ export class ScriptsComponent implements OnInit {
     if (!this.paymentData) return;
     
     this.paymentPolling = true;
-    const pollInterval = setInterval(() => {
+    this.pollingInterval = setInterval(() => {
+      if (!this.paymentData) {
+        clearInterval(this.pollingInterval);
+        this.pollingInterval = null;
+        this.paymentPolling = false;
+        return;
+      }
+      
       this.apiService.getPaymentStatus(this.paymentData!.paymentId).subscribe({
         next: (status: PaymentStatusModel) => {
           if (status.status === 'approved') {
-            clearInterval(pollInterval);
+            clearInterval(this.pollingInterval);
+            this.pollingInterval = null;
             this.paymentPolling = false;
             this.showPaymentSuccess();
           } else if (status.status === 'rejected' || status.status === 'expired') {
-            clearInterval(pollInterval);
+            clearInterval(this.pollingInterval);
+            this.pollingInterval = null;
             this.paymentPolling = false;
             this.showPaymentError();
           }
@@ -121,7 +131,10 @@ export class ScriptsComponent implements OnInit {
     
     // Stop polling after 10 minutes
     setTimeout(() => {
-      clearInterval(pollInterval);
+      if (this.pollingInterval) {
+        clearInterval(this.pollingInterval);
+        this.pollingInterval = null;
+      }
       this.paymentPolling = false;
     }, 600000);
   }
@@ -137,6 +150,10 @@ export class ScriptsComponent implements OnInit {
   }
 
   closePaymentModal(): void {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+      this.pollingInterval = null;
+    }
     this.showPaymentModal = false;
     this.selectedScript = null;
     this.paymentData = null;
